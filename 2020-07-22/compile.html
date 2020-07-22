@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>compile</title>
+</head>
+<body>
+	<div id="app">
+    <h1>{{stage}} 平台课程：{{course.title}}</h1>
+    <p>{{course.title}} 是 {{course.author}} 发布的课程</p>
+		<p>发布时间为 {{course.publishTime}} </p>
+		<input v-model="inputData" type = "text" >
+		<input id='input' s-value='inputValue'/>
+</div>
+	<script>
+
+let data = {
+  stage: 'GitChat',
+  course: {
+    title: '前端开发进阶',
+    author: ['Lucas'],
+    publishTime: '2018 年 5 月'
+	},
+	inputData: 123,
+	inputValue: 12345
+}
+
+const input = document.getElementById('input')
+
+	Array.from(input.attributes).forEach(attr=>{
+		let name = attr.name
+		let value = attr.value
+		if(name.includes('s-')){
+			input.value = data[value]
+		}
+			// console.log(value)
+			input.addEventListener('input',e=>{
+				let newVal = e.target.value
+				data[value] = newVal
+				console.log(data)
+			})
+		
+	})
+
+		function compile(el, data){
+			let fragment = document.createDocumentFragment()
+			while(child=el.firstChild){
+				fragment.appendChild(child)
+			}
+
+			function replace(fragment){
+				Array.from(fragment.childNodes).forEach(node=>{
+					let textContent = node.textContent
+					let reg = /\{\{(.*?)\}\}/g
+					if(node.nodeType === 3 && reg.test(textContent)){
+						const nodeTextContent = node.textContent
+						const replaceText = () => {
+							node.textContent = nodeTextContent.replace(reg, (matched, placeholder)=>{
+								// console.log(matched, placeholder)
+								return placeholder.split('.').reduce((prev, key)=>{
+									console.log(prev)
+									return prev[key]
+								},data)
+							})	
+						}
+						replaceText()
+					}
+
+					if(node.nodeType===1){
+						let attributesArray = node.attributes
+						Array.from(attributesArray).forEach(attr=>{
+							let attrName = attr.name
+							let attrValue = attr.value
+							if(attrName.includes('v-')){
+								node.value = data[attrValue]
+							}
+							node.addEventListener('input', e=>{
+								let newVal = e.target.value
+								data[attrValue] = newVal
+							})
+						})
+					}
+
+					if(node.childNodes && node.childNodes.length){
+						replace(node)
+					}
+				})
+			}
+			replace(fragment)
+			el.appendChild(fragment)
+			return el
+		}
+
+		function VInput(){
+
+		}
+
+		compile(document.querySelector('#app'), data)
+
+	</script>
+</body>
+</html>

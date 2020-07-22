@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>框架 demo</title>
+</head>
+
+<body>
+
+<script>
+	let data = {
+		age: 20,
+		other: {
+			name: 'namehei',
+			addr: ['anhui'],
+			birth: '1991'
+		}
+	}
+
+	// const arrExtend = Object.create(Array.prototype);
+
+	// const arrMethods = [ 'push', 'pop', 'splice', 'shift', 'unshift', 'sort', 'reverse' ]
+
+	// arrMethods.forEach(method=>{
+	// 	const oldM = Array.prototype[method]
+	// 	const newM = function(...arg){
+	// 		oldM.apply(this, arg)
+	// 		console.log(method + '执行了')
+	// 	}
+	// 	arrExtend[method] = newM
+	// })
+
+	// Array.prototype = Object.assign(Array.prototype, arrExtend)
+
+
+	// function observe(data) {
+	// 	if(!data || typeof data != 'object') return
+	// 	Object.keys(data).forEach(key => {
+	// 		let currentValue = data[key]
+	// 		observe(currentValue)
+	// 		Object.defineProperty(data, key, {
+	// 			enumerable: true,
+	// 			configurable: false,
+	// 			get() {
+	// 				console.log(`getting ${key} value now , getting value is:`, currentValue)
+	// 				return currentValue
+	// 			},
+	// 			set(newValue) {
+	// 				currentValue = newValue
+	// 				console.log(`settng ${key} value, setting value is`, currentValue)
+	// 			}
+	// 		})
+	// 	});
+	// }
+
+	function observe(data){
+		if(!data || Object.prototype.toString.call(data) !== '[object Object]') return 
+		Object.keys(data).forEach(key => {
+			let currentValue = data[key]
+			if(typeof currentValue === 'object') {
+				observe(currentValue)
+				data[key] = new Proxy(currentValue, {
+					set(target, property, value, receiver){
+						if(property!=='length'){
+							console.log(`setting ${key} value , setting value is`, currentValue)
+						}
+						return Reflect.set(target, property, value, receiver)
+					}
+				})
+			}else{
+				Object.defineProperty(data, key, {
+					enumerable: true,
+					configurable: false,
+					get() {
+						console.log(`getting ${key} value now, getting value is:`, currentValue)
+						return currentValue
+					},
+					set(newValue) {
+						currentValue = newValue
+						console.log(`setting ${key} value now, setting value is`, currentValue)
+					}
+				})
+			}
+		})
+	}
+	
+	observe(data)
+	// console.log(data.age)
+	// data.age = 100
+	// console.log(data.age)
+	// data.other.name = 'gzl'
+	// console.log(data.other)
+	data.other.addr.push('shanghai')
+	
+
+</script>
+</body>
+
+</html>
