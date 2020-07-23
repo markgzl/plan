@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>虚拟 DOM</title>
+</head>
+<body>
+	
+	<script>
+		const virtualDomList = {
+			tagName: 'ul',
+			attributes: {
+				id: 'chapterList'
+			},
+			children: [
+				{ tagName: 'li', attributes: {class: 'chapter'}, children: [ 'chapter1'] },
+				{ tagName: 'li', attributes: {class: 'chapter'}, children: [ 'chapter2'] },
+				{ tagName: 'li', attributes: {class: 'chapter'}, children: [ 'chapter3'] }
+			]
+		}
+
+		const setAttributes = (node, key, value) => {
+			switch(key){
+				case 'style':
+					node.style.cssText = value
+					break
+				case 'value': 
+					let tagName = node.tagName || ''
+					tageName = tageName.toLowerCase()
+					if(tageName==='input' || tageName==='textarea'){
+						node.value = value
+					}else{
+						node.setAttribute(key, value)
+					}
+					break
+				default: 
+					node.setAttribute(key, value)
+					break
+			}
+		}
+
+		class Element {
+			constructor(tageName, attributes={}, children){
+				this.tageName = tageName
+				this.attributes = attributes
+				this.children = children
+			}
+
+			render(){
+				const ele = document.createElement(this.tageName)
+
+				let attrs = this.attributes
+				for( let key in attrs){
+					setAttributes( ele, key, attrs[key])
+				}
+				let children = this.children
+
+				children.forEach(child => {
+					let childElement = null
+					if(child instanceof Element ){
+						childElement = child.render()
+					}else{
+						childElement = document.createTextNode(child)
+					}
+					ele.appendChild(childElement)
+				});
+				return ele
+			}
+		}
+
+		const element  = (tageName, attributes, children) => new Element(tageName, attributes, children)
+
+		const viralDom = element('ul', {id: 'chapterList'}, [
+			element('li',{class: 'chapter'}, ['chapter1']),
+			element('li',{class: 'chapter'}, ['chapter2']),
+			element('li',{class: 'chapter'}, ['chapter3']),
+		] )
+
+		const renderDom = (ele, target) => {
+			target.appendChild(ele)
+		}
+		
+		const ele = viralDom.render()
+
+		renderDom(ele, document.body)
+
+
+		let initialIndex = 0
+		const walkToDiff = (oldVirtualDom, newVirtualDom, index, patches) => {
+			let diffResults = []
+			if(!newVirtualDom){
+				diffResults.push({
+					type: 'REMOVE',
+					index
+				})
+			}else if(typeof oldVirtualDom === 'string' && typeof newVirtualDom ==='string'){
+				if(oldVirtualDom!==newVirtualDom){
+					diffResults.push({
+						type: 'MODITY_TEXT',
+						data: newVirtualDom,
+						index
+					})
+				}
+			}else if(oldVirtualDom.tagName === newVirtualDom.tagName){
+				// 新旧节点类型相同则比较属性
+				let diffAttrResults = []
+				for(let key in oldVirtualDom){
+					if(oldVirtualDom[key] != newVirtualDom[key]){
+						diffAttrResults[key] = newVirtualDom[key]
+					}
+				}
+				for( let key in newVirtualDom ){
+					if(!oldVirtualDom.hasOwnProperty(key)){
+						diffAttrResults[key] = newVirtualDom[key]
+					}
+				}
+
+				if(Object.keys(diffAttrResults).length > 0){
+					diffResults.push({
+						type: 'MODIFY_ATTRIBUTES',
+						diffAttrResults,
+						index
+					})
+				}
+				oldVirtualDom.children.forEach((child, index)=>{
+					walkToDiff(child, newVirtualDom.children[index], ++initialIndex, patches)
+				})
+
+			}else {
+				diffResults.push({
+					type: 'REPLACE',
+					newVirtualDom,
+					index
+				})
+			}
+
+			if(diffResults.length){
+				patches[index] = diffResults
+			}
+		}
+
+
+		const diff = (oldVirtualDom, newVirtualDom) => {
+			let patches = {}
+			// 这里对新旧 dom 进行递归比较
+			walkToDiff(oldVirtualDom, newVirtualDom, 0, patches)
+			return patches
+		}
+
+		const doPatch = (node, patches) => {
+			// 对所有的差异进行遍历
+			patches.forEach(patch=>{
+				console.log(patch.type,'ytype')
+				switch(patch.type){
+					case 'MODIFY_ATTRIBUTES':
+						const attributes = patch.diffAttrResults.attributes
+						for(let key in attributes){
+							if (node.nodeType !== 1) return
+
+							const value  = attributes[key]
+							if(value){
+								node.setAttribute(key, value)
+							}else{
+								node.removeAttribute(key)
+							}
+						}
+						break
+					case 'MODITY_TEXT':
+						node.textContent = patch.data
+						break
+					case 'REPALCE': 
+						let newNode = patch.newNode instanceof Element ? render(patch.newNode): document.createTextNode(patch.newNode)
+						node.parentNode.replaceChild(newNode, node)
+						break
+					case 'REMOVE': 
+						node.parentNode.removeChild(node)
+						break
+					default: 
+						break
+				}
+			})
+		}
+
+		const walk = (node, walker, patches) => {
+
+			let currentPatch = patches[walker.index]
+			let childNodes = node.childNodes
+
+			childNodes.forEach(child=>{
+				walker.index++ 
+				walk(child, walker, patches)
+			})
+			console.log(currentPatch)
+
+			if(currentPatch){
+				doPatch(node, currentPatch)
+			}
+		}
+
+		const patch = (node, patches) => {
+			let walker = { index: 0}
+			walk(node, walker, patches)
+		}
+
+
+		const viralDom2 = element('ul', {id: 'list2'}, [
+			element('li',{class: 'chapter2'}, ['chapter5']),
+			element('li',{class: 'chapter2'}, ['chapter6']),
+			element('li',{class: 'chapter2'}, ['chapter7']),
+		] )
+
+
+
+const pathes = diff(viralDom, viralDom2)
+console.log(pathes)
+patch(ele, pathes)
+
+
+	</script>
+</body>
+</html>
