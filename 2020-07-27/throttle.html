@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>简易版的 throttle</title>
+    <style>
+      p {
+        line-height: 80px;
+        text-align: center;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>1</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+    <p>wenben</p>
+  </body>
+  <script>
+    function throllte(fn, wait) {
+      let startTime = 0;
+      return function () {
+        const args = Array.from(arguments);
+        const self = this;
+        const now = new Date().getTime();
+        if (now - startTime > wait) {
+          fn.apply(self, args);
+          startTime = now;
+        }
+      };
+    }
+    // window.addEventListener('scroll', function(e){
+    // 	console.log(e)
+    // })
+    window.addEventListener(
+      "scroll",
+      throllte((e) => {
+        console.log(e);
+      }, 500)
+    );
+  </script>
+</html>
