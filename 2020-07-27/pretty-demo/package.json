@@ -1,0 +1,17 @@
+{
+    "name": "prettier-demo",
+    "version": "1.0.0",
+    "scripts": {
+        "pretty": "prettier --write src/index.js"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick --staged"
+        }
+    },
+    "devDependencies": {
+        "husky": "^4.2.5",
+        "prettier": "^2.0.5",
+        "pretty-quick": "^2.0.1"
+    }
+}
