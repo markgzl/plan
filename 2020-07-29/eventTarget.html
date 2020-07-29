@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eventarget</title>
+  </head>
+  <body>
+    <form id="form">
+      <p>这是一行文本 可复制的</p>
+      <button type="reset" id="btn">reset</button>
+      <button type="submit" id="btn2">submit</button>
+    </form>
+    <script>
+      // console.log(document instanceof Document)
+      const form = document.getElementById("form");
+      form.addEventListener(
+        "reset",
+        (e) => {
+          localStorage.removeItem("key");
+          console.log(e);
+        },
+        false
+      );
+      form.addEventListener(
+        "submit",
+        (e) => {
+          e.preventDefault();
+          window.localStorage.setItem("key", "value");
+          console.log(e);
+        },
+        false
+      );
+      document.addEventListener(
+        "copy",
+        (e) => {
+          console.log("copy", e.target.innerText);
+        },
+        false
+      );
+      window.addEventListener("storage", (e) => {
+        console.log(JSON.parse(window.localStorage.getItem("key")));
+
+        console.log(e);
+      });
+    </script>
+  </body>
+</html>
