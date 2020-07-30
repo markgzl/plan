@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>本地存储</title>
+  </head>
+  <body>
+    <div id="btnBox">
+      <button id="cookie">cookie</button>
+      <button id="session">session</button>
+      <button id="storage">storage</button>
+    </div>
+  </body>
+
+  <script>
+    const ele = document.getElementById("btnBox");
+
+    function setCookie(name, val, hour = 24) {
+      console.log(val, "value");
+      const expires = new Date().getTime() + 1000 * 60 * 60 * hour;
+      document.cookie = `${name}=${val};expires=${expires};HttpOnly=true;path=/`;
+    }
+
+    function getCookie(name) {
+      let value = "";
+      const cookies = document.cookie.split(";");
+      for (let cookie of cookies) {
+        let [key, v] = cookie.split("=");
+        if (key.trim() === name) {
+          value = v;
+          break;
+        }
+      }
+      return value;
+    }
+
+    function optCookie() {
+      if (!!getCookie("ko")) {
+        setCookie("ko", "", 0);
+      } else {
+        setCookie("ko", "kokokokoko", 1);
+      }
+    }
+
+    function optSession() {}
+
+    function optStorage() {}
+
+    ele.addEventListener("click", (e) => {
+      const dom = e.target;
+      const storageType = dom.getAttribute("id");
+      if (storageType === "cookie") {
+        optCookie();
+      }
+      if (storageType === "session") {
+        optSession();
+      }
+      if (storageType === "storage") {
+        optStorage();
+      }
+    });
+  </script>
+</html>
