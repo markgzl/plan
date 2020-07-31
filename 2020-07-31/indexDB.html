@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>indexDB</title>
+  </head>
+  <body>
+    <script>
+      if (window.indexedDB) {
+        const request = window.indexedDB.open("test", "1.9");
+        let db;
+        request.onupgradeneeded = (e) => {
+          console.log(e);
+        };
+        request.onsuccess = (e) => {
+          console.log(e);
+          db = e.target.result;
+          console.log("db", db);
+        };
+        request.onerror = (e) => {
+          console.error(e);
+        };
+        if (db) {
+          console.log("how");
+          db.createObjectStore("test", { keyPath: "email" });
+          db.createObjectStore("test2", { autoIncrement: true });
+
+          const transaction = db.transaction(["firstOS"], "readwrite");
+          let store = transaction.objectStore("firstOS");
+
+          const data = { name: "monkey" };
+          const req = store.add(data, 1);
+          req.oncomplete = (event) => {
+            console.log(event);
+          };
+          req.onabort = (e) => console.error(e);
+          req.onerror = (e) => console.error(e);
+        }
+      }
+    </script>
+  </body>
+</html>
