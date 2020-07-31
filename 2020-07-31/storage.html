@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>storage && session 封装</title>
+  </head>
+  <body>
+    <script>
+      (() => {
+        function isBaseData(val) {
+          return (
+            typeof val === "number" ||
+            typeof val === "string" ||
+            typeof val === "boolean"
+          );
+        }
+        // 存
+        function setStorage(key, value, type = "sessionStorage") {
+          const storage = window[type];
+          if (storage && value) {
+            const timer = new Date().getTime();
+            let storageInfo = {
+              timer,
+              value: value,
+            };
+            storage.setItem(key, JSON.stringify(storageInfo));
+          } else {
+            if (value) {
+              console.warn(`浏览器尚不支持${type}`);
+            } else {
+              console.error(`value 值不合法或函数调用参数有误`);
+            }
+          }
+        }
+        // 取
+        function getStorage(key, type = "sessionStorage") {
+          const storage = window[type];
+          if (storage) {
+            let storageInfo = storage.getItem(key);
+            if (storageInfo) {
+              return JSON.parse(storageInfo);
+            }
+          } else {
+            console.warn(`浏览器尚不支持${type}`);
+          }
+          return null;
+        }
+        // 取所有
+        function getAllStorage(key, type = "sessionStorage") {
+          const storage = window[type];
+          let allStroage = [];
+          if (storage) {
+            for (let key of Object.keys(storage)) {
+              allStroage.push(getStorage(key));
+            }
+          } else {
+            console.warn(`浏览器尚不支持${type}`);
+          }
+          console.log(allStroage);
+          return allStroage;
+        }
+
+        // clear
+        function clearStorage(type = "sessionStorage") {
+          const storage = window[type];
+          if (storage) {
+            storage.clear();
+          } else {
+            console.warn(`浏览器尚不支持${type}`);
+          }
+        }
+
+        setStorage("NUM1", "123");
+        setStorage("NUM3", { ko: "123" });
+        setStorage("NUM2", 1000, "localStorage");
+        getAllStorage();
+        console.log(getStorage("NUM1"));
+        // clearStorage()
+        // clearStorage('localStorage')
+      })();
+    </script>
+  </body>
+</html>
