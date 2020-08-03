@@ -25,6 +25,7 @@
 			console.log('pop', e)
 		})
 		const list = document.getElementById('list')
+		// history 模式需要借助服务端或者 nginx 配置路由指向 index.html
 		list.addEventListener('click', e=>{
 			if(e.target.nodeName==='LI'){
 				const newState = {
