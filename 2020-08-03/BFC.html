@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BFC test</title>
+	<style>
+		section{
+			overflow: hidden;
+			margin: 30px;
+		}
+		#box1 .p{
+			width: 200px;
+			height: 200px;
+			background-color: lightblue;
+			margin-top: 30px;
+			/* border: 1px solid red; */
+		}
+		#box1 .c{
+			margin-top: 20px;
+			width: 100%;
+			height: 190px;
+			background-color: blue;
+		}
+		#box2{
+			
+		}
+		#box2 .b1{
+			width: 200px;
+			height: 200px;
+			background-color: red;
+			margin: 30px 50px;
+			float: left;
+		}
+		#box2 .b2{
+			width: 200px;
+			height: 200px;
+			background-color: orange;
+			margin: 30px 100px;
+			float: left;
+		}
+		#box3 .l{
+			width: 200px;
+			height: 200px;
+			float: left;
+			background-color: blue;
+			margin-right: 30px;
+		}
+		#box3 .r{
+			width: 50%;
+			height: 600px;
+			background-color: yellow;
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<body>
+	<section id='box1'>
+		<!-- 父子元素的 margin 发生重叠，以大值为准 -->
+		<div class="p">
+			<div class="c"></div>
+		</div>
+	</section>
+<!-- 兄弟元素 -->
+	<section id='box2'>
+		<div class="b1">
+
+		</div>
+		<div class="b2">
+
+		</div>
+	</section>
+	<section id='box3'>
+		<div class="l">left</div>
+		<div class="r">子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准子元素的 margin 发生重叠，以大值为准</div>
+	</section>
+	<style>
+		.father-layout {
+            background: pink;
+        }
+
+        .father-layout .left {
+            float: left;
+            width: 100px;
+            height: 100px;
+            background: green;
+        }
+
+        .father-layout .right {
+            height: 150px;  /*右侧标准流里的元素，比左侧浮动的元素要高*/
+            background: red;
+						overflow: hidden;
+        }
+	</style>
+	<section class="father-layout">
+    <div class="left">
+        左侧，生命壹号
+    </div>
+    <div class="right">
+        右侧，smyhvae，smyhvae，smyhvae，smyhvae，smyhvae，smyhvae，smyhvae，smyhvae，smyhvae，smyhvae，smyhvae，smyhvae，
+    </div>
+</section>
+</body>
+</html>
