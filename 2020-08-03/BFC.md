@@ -26,3 +26,16 @@
 - window.getComputedStyle(ele).width/height (通用)
 - ele.currentStyle.width/height (IE 独有)
 - ele.getBoundingClientRect().width/height (获取一个元素的绝对位置)
+  
+
+#### 如何生成一个 BFC
+- overflow 除了 visible 以外的值 (hidden、auto、scroll)；
+- 浮动元素： float 除 none 以外的值；
+- 绝对定位元素： ：position (absolute、fixed)；
+- display 为 inline-block、table-cells、flex。
+
+
+#### BFC 常用来解决什么问题？
+- margin 合并
+- 高度塌陷
+- 两栏布局
