@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<style>
+			body{
+				width: 100%
+			}
+			div{
+				width: 100%
+			}
+		</style>
+</head>
+
+<body>
+	<div>
+		zhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzizhelishiwenzi
+	</div>
+
+    <script>
+			const ek = document.body
+			console.log(window.getComputedStyle(ek).width)
+			document.body.style.width = window.getComputedStyle(ek).width 
+        var removeDuplicates = function(nums) {
+            var j = 0;
+            var n = nums.length;
+            for (let i = 1; i < n; i++) {
+                // debugger 
+                if (nums[i] != nums[i - 1]) {
+                    j++;
+                    nums[j] = nums[i];
+                    console.log(nums, 'nums', i, 'j:', j)
+                }
+            }
+            return j + 1;
+        };
+        var maxSubArray = function(nums) {
+            let max = 0, sum =0
+            for (let n of nums) {
+							console.log(n,'====')
+							sum =  Math.max(n, n + sum)
+							max = Math.max(max, sum)
+							console.log('max',max)
+            }
+            return max
+        };
+        let yh = [-2, 1, -3, 4, -1, 2, 1, -5, 100]
+        let ng = [1, 2, 3, 5, 6, 4, 3, 3, 2]
+
+        // console.log(removeDuplicates(ng))
+				// console.log(maxSubArray(yh))
+				
+		var generate = function(numRows) {
+    let nums = [[1],[1,1]]
+    if(numRows===1) return nums[0]
+    if(numRows===2) return nums
+        while(numRows>nums.length){
+            let last = nums[nums.length-1]
+            let l = [];
+						let n = 0
+						console.log(last,'----')
+            for(let k in last){
+							console.log(k,'===')
+							l.push(n+last[k])
+							n = last[k]
+               if(k==(last.length-1)){
+                   l.push(1)
+               }
+            }
+      
+            nums.push(l)
+        }
+    return nums
+};
+console.log(generate(5))
+    </script>
+</body>
+
+</html>
