@@ -47,3 +47,48 @@ let reg = /\d{2,4}?/g  // 如果有 尽可能少 匹配，如超过 2 个，就�
 reg.match('123 1234 12345') // ['12', '12', '34', '12','34']
 
 ```
+
+#### 4 多选分支
+- 使用 | (管道符) 分割
+- 分支结构也是惰性， 匹配到一个就不会匹配后续的
+- 格式 (r1|r2|r3)
+```js
+let r = /guo|zl/g
+let str = 'guozl zl guo'
+str.match(r) // ["guo", "zl", "zl", "guo"]
+// 惰性的表现
+let r1 = /guo|guoo/g
+let r2 = /guoo|guo/g
+let str = 'guoo'
+str.match(r1) // ['guo']
+str.match(r2) // ['guoo']
+```
+- 例 1 16进制的色值匹配
+```js
+let colorReg = /^#([a-fA-F\d]{3}|[a-fA-F\d]{6})$/
+colorReg.test('#f00') // true
+colorReg.test('#666666') // true
+```
+- 例 2 时间匹配 01:09, 14:30
+```js
+let timerReg = /^([01]\d)|(2[0-3])\:[0-5]\d$/g
+timerReg.test("23:25"); // true
+timerReg.test("03:05"); // true
+```
+- 例 3 时间匹配 1:9, 20:50, 01:04
+```js
+let timerReg = /^(0?[1-9]|1[0-9]|2[0-3])\:(0?[1-5][0-9])$/
+timerReg.test("23:25"); // true
+timerReg.test("03:05"); // true
+timerReg.test("3:5");   // true
+```
+- 例 4 yyyy-mm-dd
+```js
+let dateReg = /^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/
+```
+- 例 5 匹配 class
+```js
+let classReg = /class="[^"]*"/
+let el = '<div id="leo" class="good" name="123"></id>'
+el.match(classReg) //  class="good"
+```
