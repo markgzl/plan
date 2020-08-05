@@ -92,3 +92,34 @@ let classReg = /class="[^"]*"/
 let el = '<div id="leo" class="good" name="123"></id>'
 el.match(classReg) //  class="good"
 ```
+
+### 二、位置匹配
+- 匹配每个字符两边的位置
+#### 1 ^ , $
+- ^ 匹配开头，多行中匹配行开头
+- $  匹配结尾，多行中匹配行结尾
+```js
+'hello'.replace(/^|$/g, '#') // '#hello#'
+'hello\nworld\n'.replace(/^|$/gm,'#') // 多行匹配模式使用 m 修饰符
+/*
+#hello#
+#world#
+*/ 
+```
+#### 2 \b  \B
+- \b 匹配单词边界， 即\w 与\W 之间的位置
+- \B 与\b 相反
+```js
+let str = '12 we[2]sa_1,lp.ok'
+str.replace(/\b/g,'#') // '#12# #we#[#2#]#sa_1#,#lp#.#ok#'
+str.replace(/\B/g,'#') //'1#2 w#e[2]s#a#_#1,l#p.o#k'
+```
+
+#### 3 (?=p) 和 (?!p)
+- p 为一个子模式
+- (?=p) 匹配前面是 p 的位置
+- (?!p) 匹配前面不是 p 的位置
+```js
+'hello'.replace(/?=l/g,'$') // 'he$l$lo'
+'hello'.replace(/?!l/g, '@') // '@h@ell@o@'
+```
